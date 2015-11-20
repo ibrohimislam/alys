@@ -13,7 +13,7 @@ public class NaiveBayesDriver {
     
     public static void main(String[] args) throws FileNotFoundException {
         DataReader dataReader = new DataReader();
-        dataReader.read("src\\alys\\weather.txt");
+        dataReader.read("src\\alys\\weather.arff");
         ArrayList<ArrayList<String>> data = dataReader.getData();
         
         NaiveBayes a = new NaiveBayes();

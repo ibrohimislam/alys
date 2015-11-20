@@ -29,8 +29,10 @@ public class DataReader {
     public void read(String filename) throws FileNotFoundException {
         String delimiter = ",";
         Scanner sc = new Scanner(new File(filename));
+        while(!sc.nextLine().contains("@data")) {}
         while(sc.hasNextLine()) {
             String line = sc.nextLine();
+            
             ArrayList<String> row = new ArrayList<>(Arrays.asList(line.split(delimiter)));
             if (data.isEmpty()) {
                 for (String element : row) {

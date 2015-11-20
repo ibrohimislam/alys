@@ -18,6 +18,10 @@ public class NaiveBayesDriver {
         
         NaiveBayes a = new NaiveBayes();
         a.init(data);
+        System.out.println("Full training set test");
         a.classify(data);
+        System.out.println("");
+        System.out.println("10 Folds cross validation test");
+        a.folds(data);
     }
 }

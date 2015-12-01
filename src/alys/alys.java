@@ -7,6 +7,10 @@ package alys;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import java.io.File;
+import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,6 +40,7 @@ public class alys extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
         jToggleButton1 = new javax.swing.JToggleButton();
+        jComboBox2 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,6 +71,8 @@ public class alys extends javax.swing.JFrame {
             }
         });
 
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "10 Folds", "Full Set" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -76,9 +83,10 @@ public class alys extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jToggleButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton1)
+                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 558, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
@@ -90,7 +98,9 @@ public class alys extends javax.swing.JFrame {
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16)
                         .addComponent(jToggleButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(24, 24, 24)
@@ -123,11 +133,43 @@ public class alys extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed1
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        // TODO add your handling code here:
-        jTextArea1.setText(FilePath);
-
+        try {
+            // TODO add your handling code here:
+            jTextArea1.setText(FilePath + "\n");
+            DataReader dataReader = new DataReader();
+            dataReader.read(FilePath);
+            ArrayList<ArrayList<String>> data = dataReader.getData();
+        
+            NaiveBayes a = new NaiveBayes();
+        a.init(data);
+        String selectedMethod1 = (String) jComboBox1.getSelectedItem();
+        String selectedMethod2 = (String) jComboBox2.getSelectedItem();
+        
+        if (selectedMethod1.equals("Naive Bayes") && selectedMethod2.equals("Full Set")){
+            jTextArea1.append("Full training set test\n");
+            a.classify(data);
+            jTextArea1.append("Correctly classified: " + a.getcorrectclassify() + "/" + a.getrowSize() + "  ");
+            jTextArea1.append(String.valueOf((new Float(a.getcorrectclassify())/a.getrowSize() * 100) + "%\n"));
+            jTextArea1.append("Incorrectly classified: " + a.getincorrectclassify() + "/" + a.getclassRow().size() + "  ");
+            jTextArea1.append(String.valueOf((new Float(a.getincorrectclassify())/ a.getrowSize() * 100) + "%\n"));   
+        }
+        else if (selectedMethod1.equals("Naive Bayes") && selectedMethod2.equals("10 Folds")){
+            jTextArea1.append("10 Folds cross validation test\n");
+            a.folds(data);
+            jTextArea1.append("Correctly classified: " + a.getcorrectfold() + "/" + a.getclassifiedInstance() + "  ");
+            jTextArea1.append(String.valueOf((new Float(a.getcorrectfold())/a.getclassifiedInstance() * 100) + "%\n"));
+            jTextArea1.append("Incorrectly classified: " + a.getincorrectfold() + "/" + a.getclassifiedInstance() + "  ");
+            jTextArea1.append(String.valueOf((new Float(a.getincorrectfold())/a.getclassifiedInstance() * 100) + "%\n"));
+        }
+        
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(alys.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jToggleButton1ActionPerformed
-
+    public void tambahteks(String a){
+        jTextArea1.append(a + "\n");
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -166,6 +208,7 @@ public class alys extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToggleButton jToggleButton1;

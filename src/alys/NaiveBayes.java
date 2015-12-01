@@ -24,9 +24,39 @@ public class NaiveBayes {
     private int rowSize = 0;
     private int colSize = 0;
     private String[] classNames;
+    private ArrayList<String> classRow;
+    private int correctclassify;
+    private int incorrectclassify;
+    private int correctfold;
+    private int incorrectfold;
+
+    private int classifiedInstance = 0;
     
     public NaiveBayes() {}
     
+    public int getrowSize(){
+        return rowSize;
+    }    
+    
+    public ArrayList<String> getclassRow(){
+        return classRow;
+    }
+    
+    public int getclassifiedInstance(){
+        return classifiedInstance;
+    }
+    public int getcorrectfold(){
+        return correctfold;
+    }
+    public int getincorrectfold(){
+        return incorrectfold;
+    }
+    public int getcorrectclassify(){
+        return correctclassify;
+    }
+    public int getincorrectclassify(){
+        return incorrectclassify;
+    }
     public void init(ArrayList<ArrayList<String>> data) {
         // Set data size
         rowSize = data.get(0).size();
@@ -82,7 +112,8 @@ public class NaiveBayes {
     }
     
     public void classify(ArrayList<ArrayList<String>> data) {
-        ArrayList<String> classRow = data.get(data.size() - 1);
+        //ArrayList<String> classRow = data.get(data.size() - 1);
+        classRow = data.get(data.size() - 1);
         Map<String, Integer> classNameCount;
         classNameCount = countClassName(classRow);
         int count = 0;
@@ -111,18 +142,21 @@ public class NaiveBayes {
         }
         int correct = count;
         int incorrect = rowSize - count;
+        correctclassify = correct;
+        incorrectclassify = incorrect;
         
-        System.out.print("Correctly classified: " + correct + "/" + rowSize + "  ");
-        System.out.println(String.valueOf((new Float(correct)/rowSize * 100) + "%"));
-        System.out.print("Incorrectly classified: " + incorrect + "/" + classRow.size() + "  ");
-        System.out.println(String.valueOf((new Float(incorrect)/rowSize * 100) + "%"));
+//        System.out.print("Correctly classified: " + correct + "/" + rowSize + "  ");
+//        System.out.println(String.valueOf((new Float(correct)/rowSize * 100) + "%"));
+//        System.out.print("Incorrectly classified: " + incorrect + "/" + classRow.size() + "  ");
+//        System.out.println(String.valueOf((new Float(incorrect)/rowSize * 100) + "%"));
     }
     
     public void folds(ArrayList<ArrayList<String>> data) {
         int foldSize = 10;
         int dividedSize = data.get(0).size()/foldSize;
-        ArrayList<String> classRow = data.get(data.size() - 1);
-        
+        //ArrayList<String> classRow = data.get(data.size() - 1);
+        classRow = data.get(data.size() - 1);
+
         // Break data into foldSize
         ArrayList<ArrayList<String>>[] dataPartials = new ArrayList[data.size()];
         for (int i = 0; i < data.size(); ++i) {
@@ -145,7 +179,7 @@ public class NaiveBayes {
         }
         
         int correct = 0;
-        int classifiedInstance = 0;
+        classifiedInstance = 0;
         for (int x = 0; x < foldSize; ++x) {
             // Membuat training set
             ArrayList<ArrayList<String>> trainingSet = new ArrayList<>();
@@ -222,9 +256,13 @@ public class NaiveBayes {
             }
         }
         int incorrect = classifiedInstance - correct;
-        System.out.print("Correctly classified: " + correct + "/" + classifiedInstance + "  ");
-        System.out.println(String.valueOf((new Float(correct)/classifiedInstance * 100) + "%"));
-        System.out.print("Incorrectly classified: " + incorrect + "/" + classifiedInstance + "  ");
-        System.out.println(String.valueOf((new Float(incorrect)/classifiedInstance * 100) + "%"));
+        alys a = new alys();
+        correctfold = correct;
+        incorrectfold = incorrect;
+        
+//        System.out.print("Correctly classified: " + correct + "/" + classifiedInstance + "  ");
+//        System.out.println(String.valueOf((new Float(correct)/classifiedInstance * 100) + "%"));
+//        System.out.print("Incorrectly classified: " + incorrect + "/" + classifiedInstance + "  ");
+//        System.out.println(String.valueOf((new Float(incorrect)/classifiedInstance * 100) + "%"));
     }
 }

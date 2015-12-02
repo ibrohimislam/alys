@@ -1,5 +1,6 @@
 package alys;
 
+import com.google.common.collect.Ordering;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -72,7 +73,8 @@ public class KNN {
             list.add(new Instance(result[i],classRow[i],i));
             //System.out.println(result[i] +" "+classRow[i] +" "+ classSimilarityOccurence.get(data[nColumn - 1][i]+result[i]));
         }
-        Collections.sort(list);
+        
+        list = Ordering.natural().greatestOf(list, k);
 
         Map<String, Integer> classOccurence = new HashMap<>();
         
